@@ -36,7 +36,7 @@ body{
     height: 20px;
     transform: translateX(-50%);
     left: 50%;
-    top: 0;
+    top: 1px;
     background-color: red;
     position: absolute;
 }

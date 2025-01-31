@@ -6,6 +6,7 @@ const heroWidth = hero.width();             //# Szerokość bohatera
 const map = $('#map');                      //# Mapa
 const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
+const shootDelay = 100;                     //# Czas między strzałem
 
 let tracking = false;                       //# Czy śledzimy ruch myszy
 let startHeroX = 0;                         //# Początkowe położenie bohatera
@@ -16,6 +17,7 @@ let mapWidth = 0;                           //# Szerokość mapy
 let minHeroX = 0;                           //# Minimalne położenie bohatera
 let maxHeroX = 0;                           //# Maksymalne położenie bohatera
 let heroHealth = 100;                       //# Zdrowie bohatera
+let shootInterval = null;                   //# Interval strzału
 
 // =========================
 // Inicjalizacja
@@ -41,9 +43,14 @@ $(document).ready(function() {
 // =========================
 $(document).on('mousedown', function(e) {
     if (e.which === 1) {
+        // Ruch
         tracking = true;
         startMouseX = e.pageX;
         startHeroX = parseFloat(hero.css('left')) || 0;
+
+        // Strzał
+        shoot();
+        shootInterval = setInterval(shoot, shootDelay);
     }
 });
 
@@ -57,6 +64,7 @@ $(document).on('mousemove', function(e) {
 $(document).on('mouseup', function(e) {
     if (e.which === 1) {
         tracking = false;
+        clearInterval(shootInterval);
     }
 });
 
@@ -117,4 +125,11 @@ function setHeroHealth(count) {
     // Ustawia zdrowie bohatera
     heroHealth = count;
     $('#hero-health').css('height', heroHealth + '%');
+}
+
+function shoot() {
+    if (ammoValue > 0) {
+        ammoValue--;
+        setAmo(ammoValue);
+    }
 }
