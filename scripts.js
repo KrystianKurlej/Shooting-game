@@ -2,6 +2,7 @@
 // Zmienne globalne
 // =========================
 const hero = $('#hero');                    //# Bohater
+const heroWidth = hero.width();             //# Szerokość bohatera
 const map = $('#map');                      //# Mapa
 const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
@@ -11,6 +12,10 @@ let startHeroX = 0;                         //# Początkowe położenie bohatera
 let startHeroY = 0;                         //# Możliwe użycie w przyszłości
 let ammoValue = 0;                          //# Liczba amunicji
 let scoreValue = 0;                         //# Wynik
+let mapWidth = 0;                           //# Szerokość mapy
+let minHeroX = 0;                           //# Minimalne położenie bohatera
+let maxHeroX = 0;                           //# Maksymalne położenie bohatera
+let heroHealth = 100;                       //# Zdrowie bohatera
 
 // =========================
 // Inicjalizacja
@@ -18,10 +23,14 @@ let scoreValue = 0;                         //# Wynik
 $(document).ready(function() {
     // Pobiera wymiary mapy
     const mapSize = getMapSize();
+    mapWidth = mapSize.width;
     // Oblicza środek
     const center = getCenter(mapSize.width, mapSize.height);
-    // Ustawia bohatera na środku
+    // Ustawia parametry bohatera
+    minHeroX = 0 + heroWidth / 2;
+    maxHeroX = mapWidth - heroWidth;
     setX(hero, center.x);
+    setHeroHealth(heroHealth);
     // Ustawia startową amunicję
     ammoValue = 100;
     setAmo(ammoValue);
@@ -55,6 +64,9 @@ $(document).on('mouseup', function(e) {
 // Funkcje pomocnicze
 // =========================
 function setX(selector, x) {
+    if (x < minHeroX) x = minHeroX;
+    if (x > maxHeroX) x = maxHeroX;
+    
     // Ustawia położenie w osi X
     selector.css('left', x + 'px');
 }
@@ -99,4 +111,10 @@ function setScore(count) {
     // Ustawia wynik
     scoreValue = count;
     score.text(scoreValue);
+}
+
+function setHeroHealth(count) {
+    // Ustawia zdrowie bohatera
+    heroHealth = count;
+    $('#hero-health').css('height', heroHealth + '%');
 }
