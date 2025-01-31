@@ -3,14 +3,16 @@
 // =========================
 const hero = $('#hero');                    //# Bohater
 const heroWidth = hero.width();             //# Szerokość bohatera
+const heroHeight = hero.height();           //# Wysokość bohatera
 const map = $('#map');                      //# Mapa
 const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const shootDelay = 100;                     //# Czas między strzałem
+const bullets = $('.bullet');               //# Pociski
 
 let tracking = false;                       //# Czy śledzimy ruch myszy
 let startHeroX = 0;                         //# Początkowe położenie bohatera
-let startHeroY = 0;                         //# Możliwe użycie w przyszłości
+let startBulletX = 0;                       //# Początkowe położenie pocisku
 let ammoValue = 0;                          //# Liczba amunicji
 let scoreValue = 0;                         //# Wynik
 let mapWidth = 0;                           //# Szerokość mapy
@@ -18,6 +20,7 @@ let minHeroX = 0;                           //# Minimalne położenie bohatera
 let maxHeroX = 0;                           //# Maksymalne położenie bohatera
 let heroHealth = 100;                       //# Zdrowie bohatera
 let shootInterval = null;                   //# Interval strzału
+let bulletId = 0;                           //# Identyfikator pocisku
 
 // =========================
 // Inicjalizacja
@@ -32,10 +35,12 @@ $(document).ready(function() {
     minHeroX = 0 + heroWidth / 2;
     maxHeroX = mapWidth - heroWidth;
     setX(hero, center.x);
+    setX(bullets, center.x);
     setHeroHealth(heroHealth);
     // Ustawia startową amunicję
     ammoValue = 100;
     setAmo(ammoValue);
+    createMultipleBullets(ammoValue);
 });
 
 // =========================
@@ -58,6 +63,7 @@ $(document).on('mousemove', function(e) {
     if (tracking) {
         const deltaX = e.pageX - startMouseX;
         setX(hero, startHeroX + deltaX);
+        setX(bullets, startHeroX + deltaX);
     }
 });
 
@@ -128,8 +134,34 @@ function setHeroHealth(count) {
 }
 
 function shoot() {
+    // Strzał
     if (ammoValue > 0) {
         ammoValue--;
         setAmo(ammoValue);
+        removeBullet();
     }
+}
+
+function createBullet() {
+    // Tworzy pocisk
+    bulletId++;
+    const bullet = $('<div class="bullet" id="bullet-' + bulletId + '"></div>');
+    map.append(bullet);
+    const heroX = parseFloat(hero.css('left')) || 0;
+    bullet.css('left', heroX - bullet.width() / 2 + 'px');
+    return bullet;
+}
+
+function createMultipleBullets(count) {
+    // Tworzy wiele pocisków
+    for (let i = 0; i < count; i++) {
+        createBullet();
+    }
+}
+
+function removeBullet() {
+    // Usuwa pocisk
+    const bullet = $('.bullet').last();
+    bulletId--;
+    bullet.remove();
 }
