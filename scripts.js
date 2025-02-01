@@ -35,7 +35,7 @@ class Game {
 
     gameLoop() {
         setInterval(() => {
-            this.bullets.forEach(bullet => bullet.move(this.enemies, this.ui, this.hero));
+            this.bullets.forEach(bullet => bullet.move(this.enemies, this.walls, this.ui, this.hero));
             this.enemies.forEach(enemy => enemy.move());
             this.walls.forEach(wall => wall.move());
         }, 50);
@@ -45,7 +45,7 @@ class Game {
 class Hero {
     constructor() {
         this.element = $('#hero');
-        this.ammo = 100;
+        this.ammo = 10;
         this.score = 0;
         this.tracking = true;
         this.shootInterval = null;
@@ -92,13 +92,19 @@ class Bullet {
         this.element.css({ left: this.x + 'px', bottom: '10px' });
     }
 
-    move(enemies, ui, hero) {
+    move(enemies, walls, ui, hero) {
         this.y -= 10;
         this.element.css('top', this.y + 'px');
         
         enemies.forEach((enemy, index) => {
             if (this.checkCollision(enemy)) {
                 enemy.takeDamage(ui, hero);
+                this.element.remove();
+            }
+        });
+
+        walls.forEach((wall, index) => {
+            if (this.checkCollision(wall)) {
                 this.element.remove();
             }
         });
