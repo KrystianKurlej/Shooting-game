@@ -7,6 +7,7 @@ const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const bullets = $('#bullets');              //# Pociski
 const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
+const body = $('body');                     //# HTML body
 
 // =========================
 // Stałe
@@ -37,6 +38,7 @@ let bulletDistanse = 0;                     //# Dystans pocisku
 // Inicjalizacja
 // =========================
 $(document).ready(function() {
+    body.css('cursor', 'crosshair');
     // Pobiera wymiary mapy
     const mapSize = getMapSize();
     mapWidth = mapSize.width;
