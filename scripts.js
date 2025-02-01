@@ -8,6 +8,7 @@ const score = $('#score bdi');              //# Wyświetla wynik
 const bullets = $('#bullets');              //# Pociski
 const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
 const walls = $('#walls');                  //# Ściany
+const enemies = $('#enemies');              //# Wrogowie
 
 // =========================
 // Stałe
@@ -20,6 +21,9 @@ const bulletRefreshRate = 10;               //# Czas odświeżania pocisku
 const wallCreationRate = 3000;              //# Czas tworzenia ściany
 const wallHealthValue = 10;                 //# Wartość zdrowia ściany
 const wallMoveSpeed = 10;                   //# Prędkość poruszania się ściany
+const enemyCreationRate = 5000;             //# Czas tworzenia wroga
+const enemyHealthValue = 20;                //# Wartość zdrowia wroga
+const enemyMoveSpeed = 10;                  //# Prędkość poruszania się wroga
 
 // =========================
 // Zmienne
@@ -38,6 +42,7 @@ let shootInterval = null;                   //# Interval strzału
 let bulletId = 0;                           //# Identyfikator pocisku
 let bulletDistanse = 0;                     //# Dystans pocisku
 let wallId = 0;                             //# Identyfikator ściany
+let enemyId = 0;                            //# Identyfikator wroga
 
 // =========================
 // Inicjalizacja
@@ -62,6 +67,8 @@ $(document).ready(function() {
     createMultipleBullets(ammoValue);
     // Rozpoczyna tworzenie ścian
     setInterval(createWall, wallCreationRate);
+    // Rozpoczyna tworzenie wrogów
+    setInterval(createEnemy, enemyCreationRate);
 });
 
 // =========================
@@ -236,5 +243,32 @@ function moveWall(wall) {
             wall.css('top', currentWallY + 1 + 'px');
             moveWall(wall);
         }, wallMoveSpeed);
+    }
+}
+
+function createEnemy() {
+    // Tworzy wroga
+    const randomX = Math.floor(Math.random() * (mapWidth - 100));
+    const enemy = $('<div class="enemy" id="enemy-' + enemyId + '" style="left: ' + randomX + 'px">' + enemyHealthValue + '</div>');
+    enemies.append(enemy);
+    enemyId++;
+    // Porusza wroga
+    moveEnemy(enemy);
+}
+
+function moveEnemy(enemy) {
+    const startEnemyY = parseFloat(enemy.css('top'));
+    
+    let currentEnemyY = startEnemyY;
+    
+    enemy.css('top', startEnemyY + 'px');
+    
+    if (currentEnemyY > mapTopBoundry) {
+        enemy.remove();
+    } else {
+        setTimeout(function() {
+            enemy.css('top', currentEnemyY + 1 + 'px');
+            moveEnemy(enemy);
+        }, enemyMoveSpeed);
     }
 }
