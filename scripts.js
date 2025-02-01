@@ -10,6 +10,7 @@ class Game {
     }
 
     init() {
+        this.hero.setTracking(true);
         this.ui.updateAmmo(this.hero.ammo);
         this.ui.updateScore(this.hero.score);
 
@@ -46,7 +47,7 @@ class Hero {
         this.element = $('#hero');
         this.ammo = 100;
         this.score = 0;
-        this.tracking = false;
+        this.tracking = true;
         this.shootInterval = null;
     }
 
@@ -74,8 +75,11 @@ class Hero {
     }
 
     stopShooting() {
-        this.tracking = false;
         clearInterval(this.shootInterval);
+    }
+
+    setTracking(value) {
+        this.tracking = value;
     }
 }
 
