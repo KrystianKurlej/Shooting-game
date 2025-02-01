@@ -1,19 +1,26 @@
 // =========================
-// Zmienne globalne
+// Elementy DOM
 // =========================
 const hero = $('#hero');                    //# Bohater
-const heroWidth = hero.width();             //# Szerokość bohatera
-const heroHeight = hero.height();           //# Wysokość bohatera
 const map = $('#map');                      //# Mapa
 const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
-const shootDelay = 100;                     //# Czas między strzałem
 const bullets = $('#bullets');              //# Pociski
 const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
 
+// =========================
+// Stałe
+// =========================
+const heroWidth = hero.width();             //# Szerokość bohatera
+const heroHeight = hero.height();           //# Wysokość bohatera
+const shootDelay = 100;                     //# Czas między strzałem
+
+// =========================
+// Zmienne
+// =========================
 let tracking = false;                       //# Czy śledzimy ruch myszy
 let startHeroX = 0;                         //# Początkowe położenie bohatera
-let startBulletsX = 0;                       //# Początkowe położenie pocisku
+let startBulletsX = 0;                      //# Początkowe położenie pocisku
 let ammoValue = 0;                          //# Liczba amunicji
 let scoreValue = 0;                         //# Wynik
 let mapWidth = 0;                           //# Szerokość mapy
@@ -167,6 +174,8 @@ function removeBullet() {
 }
 
 function fireBullet(bullet) {
-    console.log(bullet);
+    const bulletsX = parseFloat(bullets.css('left'));
+    // Wystrzeliwuje pocisk
     firedBullets.append(bullet);
+    bullet.css('left', bulletsX);
 }
