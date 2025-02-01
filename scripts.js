@@ -8,11 +8,11 @@ const map = $('#map');                      //# Mapa
 const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const shootDelay = 100;                     //# Czas między strzałem
-const bullets = $('.bullet');               //# Pociski
+const bullets = $('#bullets');              //# Pociski
 
 let tracking = false;                       //# Czy śledzimy ruch myszy
 let startHeroX = 0;                         //# Początkowe położenie bohatera
-let startBulletX = 0;                       //# Początkowe położenie pocisku
+let startBulletsX = 0;                       //# Początkowe położenie pocisku
 let ammoValue = 0;                          //# Liczba amunicji
 let scoreValue = 0;                         //# Wynik
 let mapWidth = 0;                           //# Szerokość mapy
@@ -52,6 +52,7 @@ $(document).on('mousedown', function(e) {
         tracking = true;
         startMouseX = e.pageX;
         startHeroX = parseFloat(hero.css('left')) || 0;
+        startBulletsX = parseFloat(bullets.css('left')) || 0;
 
         // Strzał
         shoot();
@@ -62,8 +63,8 @@ $(document).on('mousedown', function(e) {
 $(document).on('mousemove', function(e) {
     if (tracking) {
         const deltaX = e.pageX - startMouseX;
-        setX(hero, startHeroX + deltaX);
-        setX(bullets, startHeroX + deltaX);
+        setX(hero, startHeroX + deltaX, minHeroX, maxHeroX);
+        setX(bullets, startBulletsX + deltaX, minHeroX, maxHeroX);
     }
 });
 
@@ -77,9 +78,9 @@ $(document).on('mouseup', function(e) {
 // =========================
 // Funkcje pomocnicze
 // =========================
-function setX(selector, x) {
-    if (x < minHeroX) x = minHeroX;
-    if (x > maxHeroX) x = maxHeroX;
+function setX(selector, x, minBound, maxBound) {
+    if (x < minBound) x = minBound;
+    if (x > maxBound) x = maxBound;
     
     // Ustawia położenie w osi X
     selector.css('left', x + 'px');
@@ -146,9 +147,7 @@ function createBullet() {
     // Tworzy pocisk
     bulletId++;
     const bullet = $('<div class="bullet" id="bullet-' + bulletId + '"></div>');
-    map.append(bullet);
-    const heroX = parseFloat(hero.css('left')) || 0;
-    bullet.css('left', heroX - bullet.width() / 2 + 'px');
+    bullets.append(bullet);
     return bullet;
 }
 

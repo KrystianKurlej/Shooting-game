@@ -1,6 +1,8 @@
 :root{
     --hero-width: 48px;
     --hero-height: 48px;
+    --bullet-width: 8px;
+    --bullet-height: 20px;
 }
 
 body{
@@ -21,7 +23,7 @@ body{
 #hero{
     width: var(--hero-width);
     height: var(--hero-height);
-    transform: translate(-24px, -24px);
+    transform: translate(calc(var(--hero-height) / 2 * -1), calc(var(--hero-width) / 2 * -1));
     background-color: red;
     position: absolute;
     bottom: 0;
@@ -36,9 +38,16 @@ body{
     z-index: 1;
 }
 
+#bullets{
+    position: absolute;
+    bottom: 0;
+    transform: translateX(calc(var(--bullet-width) / 2 * -1));
+    z-index: 1;
+}
+
 .bullet{
-    width: 8px;
-    height: 20px;
+    width: var(--bullet-width);
+    height: var(--bullet-height);
     bottom: var(--hero-height);
     background-color: red;
     position: absolute;
