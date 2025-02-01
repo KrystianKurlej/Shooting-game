@@ -14,6 +14,7 @@ const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
 const heroWidth = hero.width();             //# Szerokość bohatera
 const heroHeight = hero.height();           //# Wysokość bohatera
 const shootDelay = 100;                     //# Czas między strzałem
+const bulletSpeed = 10;                     //# Prędkość pocisku
 
 // =========================
 // Zmienne
@@ -24,11 +25,13 @@ let startBulletsX = 0;                      //# Początkowe położenie pocisku
 let ammoValue = 0;                          //# Liczba amunicji
 let scoreValue = 0;                         //# Wynik
 let mapWidth = 0;                           //# Szerokość mapy
+let mapTopBoundry = 0;                      //# Górna granica mapy
 let minHeroX = 0;                           //# Minimalne położenie bohatera
 let maxHeroX = 0;                           //# Maksymalne położenie bohatera
 let heroHealth = 100;                       //# Zdrowie bohatera
 let shootInterval = null;                   //# Interval strzału
 let bulletId = 0;                           //# Identyfikator pocisku
+let bulletDistanse = 0;                     //# Dystans pocisku
 
 // =========================
 // Inicjalizacja
@@ -37,6 +40,7 @@ $(document).ready(function() {
     // Pobiera wymiary mapy
     const mapSize = getMapSize();
     mapWidth = mapSize.width;
+    mapTopBoundry = mapSize.height;
     // Oblicza środek
     const center = getCenter(mapSize.width, mapSize.height);
     // Ustawia parametry bohatera
@@ -45,6 +49,7 @@ $(document).ready(function() {
     setX(hero, center.x);
     setX(bullets, center.x);
     setHeroHealth(heroHealth);
+    bulletDistanse = mapTopBoundry - heroHeight;
     // Ustawia startową amunicję
     ammoValue = 100;
     setAmo(ammoValue);
@@ -178,4 +183,23 @@ function fireBullet(bullet) {
     // Wystrzeliwuje pocisk
     firedBullets.append(bullet);
     bullet.css('left', bulletsX);
+    moveBullet(bullet);
+}
+
+function moveBullet(bullet) {
+    // Porusza pocisk
+    const startBulletY = parseFloat(bullet.css('bottom'));
+    
+    let currentBulletY = startBulletY;
+    
+    bullet.css('bottom', startBulletY + 'px');
+    
+    if (currentBulletY > bulletDistanse) {
+        bullet.remove();
+    } else {
+        setTimeout(function() {
+            bullet.css('bottom', currentBulletY + bulletSpeed + 'px');
+            moveBullet(bullet);
+        }, bulletSpeed);
+    }
 }
