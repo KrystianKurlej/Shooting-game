@@ -18,8 +18,8 @@ class Game {
         $(document).on('mousemove', (e) => this.hero.move(e));
         $(document).on('mouseup', () => this.hero.stopShooting());
 
-        setInterval(() => this.createEnemy(), 5000);
-        setInterval(() => this.createWall(), 3000);
+        setInterval(() => this.createEnemy(), 1500);
+        setInterval(() => this.createWall(), 10000);
         this.gameLoop();
     }
 
@@ -127,7 +127,7 @@ class Enemy {
     }
 
     move() {
-        this.y += 2;
+        this.y += 5;
         this.element.css('top', this.y + 'px');
         if (this.y > $('#map').height()) {
             this.element.remove();
@@ -140,7 +140,7 @@ class Enemy {
             this.isDead = true;
             this.element.remove();
             ui.updateScore(10);
-            hero.ammo += 5;
+            hero.ammo += 3;
             ui.updateAmmo(hero.ammo);
         }
     }
