@@ -1,0 +1,18 @@
+#hero {
+    width: $hero-width;
+    height: $hero-height;
+    transform: translate(calc($hero-height / 2 * -1), calc($hero-width / 2 * -1));
+    background-color: red;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+}
+
+#hero-health {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    background-color: green;
+    z-index: 1;
+}

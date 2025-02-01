@@ -1,0 +1,9 @@
+.wall {
+    width: $wall-width;
+    font-size: calc($wall-height / 2);
+    padding: calc($wall-height / 4);
+    text-align: center;
+    background-color: white;
+    position: absolute;
+    top: $wall-height;
+}

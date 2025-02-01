@@ -1,0 +1,13 @@
+#bullets {
+    position: absolute;
+    bottom: 0;
+    transform: translateX(calc($bullet-width / 2 * -1));
+}
+
+.bullet {
+    width: $bullet-width;
+    height: $bullet-height;
+    bottom: $hero-height;
+    background-color: red;
+    position: absolute;
+}

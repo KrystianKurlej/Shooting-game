@@ -1,0 +1,9 @@
+.enemy {
+    width: $enemy-width;
+    font-size: calc($enemy-height / 2);
+    padding: calc($enemy-height / 4);
+    text-align: center;
+    background-color: blue;
+    position: absolute;
+    top: $enemy-height;
+}

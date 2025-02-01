@@ -1,160 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-
-:root{
-    --hero-width: 48px;
-    --hero-height: 48px;
-    --enemy-width: 36px;
-    --enemy-height: 36px;
-    --bullet-width: 8px;
-    --bullet-height: 20px;
-    --wall-width: 25%;
-    --wall-height: 24px;
+@import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap");
+#ui {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  background-color: #3C3C3C;
+  z-index: 1;
+  box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.5);
 }
 
-.ui-testing{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
+.ui-element {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  line-height: 100%;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ui-element#score .value {
+  background-color: #E0A329;
+  box-shadow: 0px -5px 0px 0px #D2871D inset;
+}
+.ui-element#ammo .value {
+  background-color: #E06929;
+  box-shadow: 0px -5px 0px 0px #C55518 inset;
 }
 
-body{
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-family: "Pixelify Sans", serif;
+.ui-element .value {
+  font-size: 24px;
+  text-shadow: 0px 4px 0px #000;
+  padding: 5px;
+  height: 40px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #212121;
+  position: relative;
 }
 
-#map{
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    background-color: #415838;
-    position: relative;
-    overflow: hidden;
-    cursor: crosshair;
+#map {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-color: #415838;
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
 }
 
-#hero{
-    width: var(--hero-width);
-    height: var(--hero-height);
-    transform: translate(calc(var(--hero-height) / 2 * -1), calc(var(--hero-width) / 2 * -1));
-    background-color: red;
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
+#hero {
+  width: 48px;
+  height: 48px;
+  transform: translate(-24px, -24px);
+  background-color: red;
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
 }
 
-#hero-health{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    bottom: 0;
-    background-color: green;
-    z-index: 1;
+#hero-health {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  background-color: green;
+  z-index: 1;
 }
 
-#bullets{
-    position: absolute;
-    bottom: 0;
-    transform: translateX(calc(var(--bullet-width) / 2 * -1));
+#bullets {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-4px);
 }
 
-.bullet{
-    width: var(--bullet-width);
-    height: var(--bullet-height);
-    bottom: var(--hero-height);
-    background-color: red;
-    position: absolute;
+.bullet {
+  width: 8px;
+  height: 20px;
+  bottom: 48px;
+  background-color: red;
+  position: absolute;
 }
 
-#ui{
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
-    background-color: #3C3C3C;
-    z-index: 1;
-    box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.50);
+.wall {
+  width: 25%;
+  font-size: 12px;
+  padding: 6px;
+  text-align: center;
+  background-color: white;
+  position: absolute;
+  top: 24px;
 }
 
-.ui-element{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    padding: 5px;
-    line-height: 100%;
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
+.enemy {
+  width: 36px;
+  font-size: 18px;
+  padding: 9px;
+  text-align: center;
+  background-color: blue;
+  position: absolute;
+  top: 36px;
 }
 
-.ui-element .value{
-    font-size: 24px;
-    text-shadow: 0px 4px 0px #000;
-    padding: 5px;
-    height: 40px;
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 5px solid #212121;
-    position: relative;
-}
-
-.ui-element .value::before{
-    content: "";
-    position: absolute;
-    height: calc(100% - 5px);
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    border: 5px solid #000;
-    border-bottom: none;
-}
-
-.ui-element#score .value{
-    background-color: #E0A329;
-}
-
-.ui-element#score .value::before{
-    border-color: #D2871D;
-}
-
-.ui-element#ammo .value{
-    background-color: #E06929;
-}
-
-.ui-element#ammo .value::before{
-    border-color: #C55518;
-}
-
-.wall{
-    width: var(--wall-width);
-    font-size: calc(var(--wall-height) / 2);
-    padding: calc(var(--wall-height) / 4);
-    text-align: center;
-    background-color: white;
-    position: absolute;
-    top: var(--wall-height);
-}
-
-.enemy{
-    width: var(--enemy-width);
-    font-size: calc(var(--enemy-height) / 2);
-    padding: calc(var(--enemy-height) / 4);
-    text-align: center;
-    background-color: blue;
-    position: absolute;
-    top: var(--enemy-height);
-}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Pixelify Sans", serif;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}/*# sourceMappingURL=style.css.map */
