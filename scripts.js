@@ -36,7 +36,7 @@ class Game {
     gameLoop() {
         setInterval(() => {
             this.bullets.forEach(bullet => bullet.move(this.enemies, this.walls, this.ui, this.hero));
-            this.enemies.forEach(enemy => enemy.move());
+            this.enemies.forEach(enemy => enemy.move(this.hero, this.ui));
             this.walls.forEach(wall => wall.move());
         }, 50);
     }
@@ -132,11 +132,15 @@ class Enemy {
         this.element.css({ left: this.x + 'px', top: this.y + 'px' });
     }
 
-    move() {
+    move(hero, ui) {
         this.y += 5;
         this.element.css('top', this.y + 'px');
-        if (this.y > $('#map').height()) {
+
+        if (this.y > $('#map').height() && !this.isDead) {
+            this.isDead = true;
             this.element.remove();
+            hero.ammo -= 2;
+            ui.updateAmmo(hero.ammo);
         }
     }
 
