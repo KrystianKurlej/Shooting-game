@@ -9,6 +9,7 @@ const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const shootDelay = 100;                     //# Czas między strzałem
 const bullets = $('#bullets');              //# Pociski
+const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
 
 let tracking = false;                       //# Czy śledzimy ruch myszy
 let startHeroX = 0;                         //# Początkowe położenie bohatera
@@ -137,9 +138,9 @@ function setHeroHealth(count) {
 function shoot() {
     // Strzał
     if (ammoValue > 0) {
+        fireBullet($('.bullet#bullet-' + ammoValue));
         ammoValue--;
         setAmo(ammoValue);
-        removeBullet();
     }
 }
 
@@ -163,4 +164,9 @@ function removeBullet() {
     const bullet = $('.bullet').last();
     bulletId--;
     bullet.remove();
+}
+
+function fireBullet(bullet) {
+    console.log(bullet);
+    firedBullets.append(bullet);
 }
