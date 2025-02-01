@@ -7,7 +7,6 @@ const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const bullets = $('#bullets');              //# Pociski
 const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
-const body = $('body');                     //# HTML body
 
 // =========================
 // Stałe
@@ -15,7 +14,8 @@ const body = $('body');                     //# HTML body
 const heroWidth = hero.width();             //# Szerokość bohatera
 const heroHeight = hero.height();           //# Wysokość bohatera
 const shootDelay = 100;                     //# Czas między strzałem
-const bulletSpeed = 10;                     //# Prędkość pocisku
+const bulletDistance = 10;                  //# Odległość pocisku 
+const bulletRefreshRate = 10;               //# Czas odświeżania pocisku
 
 // =========================
 // Zmienne
@@ -38,7 +38,6 @@ let bulletDistanse = 0;                     //# Dystans pocisku
 // Inicjalizacja
 // =========================
 $(document).ready(function() {
-    body.css('cursor', 'crosshair');
     // Pobiera wymiary mapy
     const mapSize = getMapSize();
     mapWidth = mapSize.width;
@@ -200,8 +199,8 @@ function moveBullet(bullet) {
         bullet.remove();
     } else {
         setTimeout(function() {
-            bullet.css('bottom', currentBulletY + bulletSpeed + 'px');
+            bullet.css('bottom', currentBulletY + bulletDistance + 'px');
             moveBullet(bullet);
-        }, bulletSpeed);
+        }, bulletRefreshRate);
     }
 }
