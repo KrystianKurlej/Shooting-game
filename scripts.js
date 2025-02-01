@@ -34,7 +34,7 @@ class Game {
 
     gameLoop() {
         setInterval(() => {
-            this.bullets.forEach(bullet => bullet.move(this.enemies, this.ui));
+            this.bullets.forEach(bullet => bullet.move(this.enemies, this.ui, this.hero));
             this.enemies.forEach(enemy => enemy.move());
             this.walls.forEach(wall => wall.move());
         }, 50);
@@ -88,13 +88,13 @@ class Bullet {
         this.element.css({ left: this.x + 'px', bottom: '10px' });
     }
 
-    move(enemies, ui) {
+    move(enemies, ui, hero) {
         this.y -= 10;
         this.element.css('top', this.y + 'px');
         
         enemies.forEach((enemy, index) => {
             if (this.checkCollision(enemy)) {
-                enemy.takeDamage(ui);
+                enemy.takeDamage(ui, hero);
                 this.element.remove();
             }
         });
@@ -115,6 +115,7 @@ class Enemy {
     constructor() {
         this.element = $('<div class="enemy"></div>');
         this.health = 20;
+        this.isDead = false;
         this.x = Math.random() * ($('#map').width() - 50);
         this.y = 0;
         $('#enemies').append(this.element);
@@ -129,11 +130,14 @@ class Enemy {
         }
     }
 
-    takeDamage(ui) {
+    takeDamage(ui, hero) {
         this.health -= 10;
-        if (this.health <= 0) {
+        if (this.health <= 0 && !this.isDead) {
+            this.isDead = true;
             this.element.remove();
             ui.updateScore(10);
+            hero.ammo += 5;
+            ui.updateAmmo(hero.ammo);
         }
     }
 }
