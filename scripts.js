@@ -7,6 +7,7 @@ const ammoCounter = $('#ammo bdi');         //# Wyświetla ilość amunicji
 const score = $('#score bdi');              //# Wyświetla wynik
 const bullets = $('#bullets');              //# Pociski
 const firedBullets = $('#fired-bullets');   //# Wystrzelone pociski
+const walls = $('#walls');                  //# Ściany
 
 // =========================
 // Stałe
@@ -16,6 +17,9 @@ const heroHeight = hero.height();           //# Wysokość bohatera
 const shootDelay = 100;                     //# Czas między strzałem
 const bulletDistance = 10;                  //# Odległość pocisku 
 const bulletRefreshRate = 10;               //# Czas odświeżania pocisku
+const wallCreationRate = 3000;              //# Czas tworzenia ściany
+const wallHealthValue = 10;                 //# Wartość zdrowia ściany
+const wallMoveSpeed = 10;                   //# Prędkość poruszania się ściany
 
 // =========================
 // Zmienne
@@ -33,6 +37,7 @@ let heroHealth = 100;                       //# Zdrowie bohatera
 let shootInterval = null;                   //# Interval strzału
 let bulletId = 0;                           //# Identyfikator pocisku
 let bulletDistanse = 0;                     //# Dystans pocisku
+let wallId = 0;                             //# Identyfikator ściany
 
 // =========================
 // Inicjalizacja
@@ -55,6 +60,8 @@ $(document).ready(function() {
     ammoValue = 100;
     setAmo(ammoValue);
     createMultipleBullets(ammoValue);
+    // Rozpoczyna tworzenie ścian
+    setInterval(createWall, wallCreationRate);
 });
 
 // =========================
@@ -202,5 +209,32 @@ function moveBullet(bullet) {
             bullet.css('bottom', currentBulletY + bulletDistance + 'px');
             moveBullet(bullet);
         }, bulletRefreshRate);
+    }
+}
+
+function createWall() {
+    // Tworzy ścianę
+    const randomX = Math.floor(Math.random() * (mapWidth - 100));
+    const wall = $('<div class="wall" id="wall-' + wallId + '" style="left: ' + randomX + 'px">' + wallHealthValue + '</div>');
+    walls.append(wall);
+    wallId++;
+    // Porusza ścianę
+    moveWall(wall);
+}
+
+function moveWall(wall) {
+    const startWallY = parseFloat(wall.css('top'));
+    
+    let currentWallY = startWallY;
+    
+    wall.css('top', startWallY + 'px');
+    
+    if (currentWallY > mapTopBoundry) {
+        wall.remove();
+    } else {
+        setTimeout(function() {
+            wall.css('top', currentWallY + 1 + 'px');
+            moveWall(wall);
+        }, wallMoveSpeed);
     }
 }
