@@ -13,7 +13,7 @@ class Game {
         this.ui.updateAmmo(this.hero.ammo);
         this.ui.updateScore(0);
 
-        $(document).on('keydown', (e) => this.hero.changeLane(e));
+        $(document).on('keydown', (e) => this.hero.doAction(e, this.ui));
         $(document).on('mousedown', (e) => this.hero.shoot(e, this.ui));
         $(document).on('mouseup', () => this.hero.stopShooting());
 
@@ -149,12 +149,16 @@ class Hero {
         this.updatePosition();
     }
 
-    changeLane(event) {
-        if (event.key === 'ArrowLeft') {
+    doAction(event, ui) {
+        event.preventDefault();
+
+        if (event.key === ' ') {
+            this.fireBullet(ui);
+        } else if (event.key === 'ArrowLeft') {
             this.currentLane = 1;
         } else if (event.key === 'ArrowRight') {
             this.currentLane = 2;
-        }
+        } 
         this.updatePosition();
     }
 
@@ -164,13 +168,6 @@ class Hero {
             2: $('#path-2').position().left + ($('#path-2').width() / 2) - (this.element.width() / 2)
         };
         this.element.css('left', lanePositions[this.currentLane] + 'px');
-    }
-
-    shoot(event, ui) {
-        if (event.which === 1 && this.ammo > 0) {
-            this.fireBullet(ui);
-            this.shootInterval = setInterval(() => this.fireBullet(ui), 150);
-        }
     }
 
     fireBullet(ui) {
@@ -183,10 +180,6 @@ class Hero {
             this.ammo--;
             ui.updateAmmo(this.ammo);
         }
-    }
-
-    stopShooting() {
-        clearInterval(this.shootInterval);
     }
 
     setTracking(value) {
