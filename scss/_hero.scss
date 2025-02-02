@@ -1,10 +1,10 @@
 #hero {
-    width: $hero-width;
-    height: $hero-height;
-    transform: translate(calc($hero-height / 2 * -1), calc($hero-width / 2 * -1));
-    background-color: red;
+    width: 80px;
+    height: 80px;
+    transform: translate(-40px, 0);
+    background-image: url('img/hero.png');
     position: absolute;
-    bottom: 0;
+    bottom: 50px;
     z-index: 1;
 }
 
