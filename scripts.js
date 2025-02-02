@@ -2,9 +2,7 @@ class Game {
     constructor() {
         this.hero = new Hero();
         this.ui = new UI();
-        this.enemies = [];
-        this.bullets = [];
-        this.walls = [];
+        this.waves = [];
         
         this.init();
     }
@@ -14,31 +12,58 @@ class Game {
         this.ui.updateAmmo(this.hero.ammo);
         this.ui.updateScore(this.hero.score);
 
-        $(document).on('mousedown', (e) => this.hero.shoot(e, this.bullets, this.ui));
+        $(document).on('mousedown', (e) => this.hero.shoot(e, this.ui));
         $(document).on('mousemove', (e) => this.hero.move(e));
         $(document).on('mouseup', () => this.hero.stopShooting());
 
-        setInterval(() => this.createEnemy(), 1500);
-        setInterval(() => this.createWall(), 10000);
+        setInterval(() => this.createWave(), 2000);
         this.gameLoop();
     }
 
-    createEnemy() {
-        const enemy = new Enemy();
-        this.enemies.push(enemy);
-    }
-
-    createWall() {
-        const wall = new Wall();
-        this.walls.push(wall);
+    createWave() {
+        const wave = new Wave();
+        this.waves.push(wave);
+        wave.spawnWave();
     }
 
     gameLoop() {
         setInterval(() => {
-            this.bullets.forEach(bullet => bullet.move(this.enemies, this.walls, this.ui, this.hero));
-            this.enemies.forEach(enemy => enemy.move(this.hero, this.ui));
-            this.walls.forEach(wall => wall.move());
+            this.waves.forEach(wave => wave.update());
         }, 50);
+    }
+}
+
+class Wave {
+    constructor() {
+        this.entities = [];
+    }
+
+    spawnWave() {
+        const paths = ['#path-1', '#path-2'];
+        let wallSpawned = false;
+
+        paths.forEach(path => {
+            let entityType = Math.random() > 0.5 ? 'enemy' : 'wall';
+            
+            if (entityType === 'wall' && wallSpawned) {
+                entityType = 'enemy';
+            }
+            
+            if (entityType === 'wall') {
+                wallSpawned = true;
+                const wall = new Wall();
+                $(path).append(wall.element);
+                this.entities.push(wall);
+            } else {
+                const enemy = new Enemy();
+                $(path).append(enemy.element);
+                this.entities.push(enemy);
+            }
+        });
+    }
+
+    update() {
+        this.entities.forEach(entity => entity.move());
     }
 }
 
@@ -57,18 +82,17 @@ class Hero {
         }
     }
 
-    shoot(event, bulletsArray, ui) {
+    shoot(event, ui) {
         if (event.which === 1 && this.ammo > 0) {
             this.tracking = true;
-            this.fireBullet(bulletsArray, ui);
-            this.shootInterval = setInterval(() => this.fireBullet(bulletsArray, ui), 100);
+            this.fireBullet(ui);
+            this.shootInterval = setInterval(() => this.fireBullet(ui), 100);
         }
     }
 
-    fireBullet(bulletsArray, ui) {
+    fireBullet(ui) {
         if (this.ammo > 0) {
-            const bullet = new Bullet(this.element.offset().left);
-            bulletsArray.push(bullet);
+            new Bullet(this.element.offset().left);
             this.ammo--;
             ui.updateAmmo(this.ammo);
         }
@@ -91,86 +115,31 @@ class Bullet {
         $('#fired-bullets').append(this.element);
         this.element.css({ left: this.x + 'px', bottom: '10px' });
     }
-
-    move(enemies, walls, ui, hero) {
-        this.y -= 10;
-        this.element.css('top', this.y + 'px');
-        
-        enemies.forEach((enemy, index) => {
-            if (this.checkCollision(enemy)) {
-                enemy.takeDamage(ui, hero);
-                this.element.remove();
-            }
-        });
-
-        walls.forEach((wall, index) => {
-            if (this.checkCollision(wall)) {
-                this.element.remove();
-            }
-        });
-    }
-
-    checkCollision(enemy) {
-        let bulletRect = this.element[0].getBoundingClientRect();
-        let enemyRect = enemy.element[0].getBoundingClientRect();
-        
-        return !(bulletRect.top > enemyRect.bottom ||
-                 bulletRect.bottom < enemyRect.top ||
-                 bulletRect.left > enemyRect.right ||
-                 bulletRect.right < enemyRect.left);
-    }
 }
 
 class Enemy {
     constructor() {
         this.element = $('<div class="enemy"></div>');
-        this.health = 20;
-        this.isDead = false;
-        this.x = Math.random() * ($('#map').width() - 50);
         this.y = 0;
         $('#enemies').append(this.element);
-        this.element.css({ left: this.x + 'px', top: this.y + 'px' });
     }
 
-    move(hero, ui) {
+    move() {
         this.y += 5;
         this.element.css('top', this.y + 'px');
-
-        if (this.y > $('#map').height() && !this.isDead) {
-            this.isDead = true;
-            this.element.remove();
-            hero.ammo -= 2;
-            ui.updateAmmo(hero.ammo);
-        }
-    }
-
-    takeDamage(ui, hero) {
-        this.health -= 10;
-        if (this.health <= 0 && !this.isDead) {
-            this.isDead = true;
-            this.element.remove();
-            ui.updateScore(10);
-            hero.ammo += 3;
-            ui.updateAmmo(hero.ammo);
-        }
     }
 }
 
 class Wall {
     constructor() {
         this.element = $('<div class="wall"></div>');
-        this.x = Math.random() * ($('#map').width() - 100);
         this.y = 0;
         $('#walls').append(this.element);
-        this.element.css({ left: this.x + 'px', top: this.y + 'px' });
     }
 
     move() {
         this.y += 1;
         this.element.css('top', this.y + 'px');
-        if (this.y > $('#map').height()) {
-            this.element.remove();
-        }
     }
 }
 
