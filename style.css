@@ -108,9 +108,10 @@
 }
 
 .wall {
-  width: 170px;
-  height: 125px;
+  width: 150px;
+  height: 110px;
   background-image: url("../img/car.png");
+  background-size: contain;
   position: absolute;
   top: 0;
   left: 50%;

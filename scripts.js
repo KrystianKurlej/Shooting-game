@@ -16,7 +16,7 @@ class Game {
         $(document).on('mousemove', (e) => this.hero.move(e));
         $(document).on('mouseup', () => this.hero.stopShooting());
 
-        setInterval(() => this.createWave(), 2000);
+        setInterval(() => this.createWave(), 4000);
         this.gameLoop();
     }
 
@@ -29,7 +29,7 @@ class Game {
     gameLoop() {
         setInterval(() => {
             this.waves.forEach(wave => wave.update());
-        }, 50);
+        }, 10);
     }
 }
 
@@ -125,7 +125,7 @@ class Enemy {
     }
 
     move() {
-        this.y += 5;
+        this.y += 1;
         this.element.css('top', this.y + 'px');
     }
 }
