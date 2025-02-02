@@ -69,8 +69,6 @@
 
 .path {
   position: relative;
-  border: 1px solid red;
-  background-color: rgba(255, 0, 0, 0.109);
   height: 100%;
   width: 170px;
   z-index: 1;
@@ -110,21 +108,21 @@
 }
 
 .wall {
-  width: 25%;
-  font-size: 12px;
-  padding: 6px;
-  text-align: center;
+  width: 100%;
+  height: 48px;
   background-color: white;
   position: absolute;
-  top: 24px;
+  top: 0;
 }
 
 .enemy {
-  width: 100%;
+  width: 48px;
   height: 48px;
   background-color: blue;
   position: absolute;
   top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 body {
