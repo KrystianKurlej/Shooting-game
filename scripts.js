@@ -50,6 +50,11 @@ class Game {
                         bullet.active = false;
 
                         if (entity.health <= 0) {
+                            if (entity instanceof Enemy) {
+                                this.hero.ammo += 3;
+                                this.ui.updateAmmo(this.hero.ammo);
+                            }
+                            
                             entity.active = false;
                             this.hero.score += 10;
                             this.ui.updateScore(this.hero.score);
