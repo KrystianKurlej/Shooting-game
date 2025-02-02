@@ -12,8 +12,8 @@ class Game {
         this.ui.updateAmmo(this.hero.ammo);
         this.ui.updateScore(this.hero.score);
 
+        $(document).on('keydown', (e) => this.hero.changeLane(e));
         $(document).on('mousedown', (e) => this.hero.shoot(e, this.ui));
-        $(document).on('mousemove', (e) => this.hero.move(e));
         $(document).on('mouseup', () => this.hero.stopShooting());
 
         setInterval(() => this.createWave(), 4000);
@@ -74,17 +74,30 @@ class Hero {
         this.score = 0;
         this.tracking = true;
         this.shootInterval = null;
+        this.currentLane = 1;
+        this.updatePosition();
     }
 
-    move(event) {
-        if (this.tracking) {
-            this.element.css('left', event.pageX + 'px');
+    changeLane(event) {
+        if (event.key === 'ArrowLeft') {
+            this.currentLane = 1;
+        } else if (event.key === 'ArrowRight') {
+            this.currentLane = 2;
         }
+        this.updatePosition();
+    }
+
+    updatePosition() {
+        const lanePositions = {
+            1: $('#path-1').position().left + ($('#path-1').width() / 2) - (this.element.width() / 2),
+            2: $('#path-2').position().left + ($('#path-2').width() / 2) - (this.element.width() / 2)
+        };
+        
+        this.element.css('left', lanePositions[this.currentLane] + 'px');
     }
 
     shoot(event, ui) {
         if (event.which === 1 && this.ammo > 0) {
-            this.tracking = true;
             this.fireBullet(ui);
             this.shootInterval = setInterval(() => this.fireBullet(ui), 100);
         }
